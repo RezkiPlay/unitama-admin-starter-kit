@@ -5,11 +5,11 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>
-        {{ $title }}</title>
+    <title>{{ $title }}</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
     <meta content="" name="author">
+
     <!-- Favicons -->
     <link href="{{ asset('niceadmin/img/favicon.png') }}" rel="icon">
     <link href="{{ asset('niceadmin/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
@@ -162,6 +162,7 @@
                     <span>Dashboard</span>
                 </a>
             </li>
+
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ route('user.index') }}">
                     <i class='bx bx-user'></i>
@@ -216,10 +217,31 @@
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
 
+    {{-- modal  delete --}}
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="" method="POST" id="form-delete">
+                    @method('DELETE')
+                    @csrf
+                    <div class="modal-body">
+                        <p>Anda Yakin Ingin Menghapus Data Ini?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Lanjutkan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @stack('modals')
+
     <!-- add on -->
     <script src="{{ asset('niceadmin/vendor/jquery/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('niceadmin/vendor/parsley/parsley.min.js') }}"></script>
-    <script src="{{ asset('niceadmin/vendor/sweetalert2/sweetalert2@11') }}""></script>
+    <script src="{{ asset('niceadmin/vendor/sweetalert2/sweetalert2@11') }}"></script>
     <script src="{{ asset('niceadmin/vendor/dataTables/js/dataTables.js') }}"></script>
     <script src="{{ asset('niceadmin/vendor/dataTables/js/dataTables.bootstrap5.js') }}"></script>
 
@@ -234,6 +256,7 @@
 
     <script>
         new DataTable('#data-table');
+
         $('.form').parsley({
             errorClass: 'is-invalid text-red',
             successClass: 'is-valid',
@@ -254,7 +277,28 @@
             theme: 'bootstrap-5',
             width: "100%",
         })
+
+        let flashSuccess = "{{ session('success') ?? '' }}"
+        if (flashSuccess) {
+            Swal.fire({
+                title: "SELESAI!",
+                text: flashSuccess,
+                icon: "success",
+                timer: 1500,
+                showConfirmButton: false,
+            });
+        }
+
+        let flashError = "{{ session('error') ?? '' }}"
+        if (flashError) {
+            Swal.fire({
+                icon: "error",
+                title: "Astaga...",
+                text: flashError,
+            });
+        }
     </script>
+    @stack('scripts')
 
 </body>
 
